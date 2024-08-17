@@ -3,19 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+
+use Illuminate\Bus\Events\BatchDispatched;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ListingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function __construct()
     {
+        $this->authorizeResource(Listing::class, 'listing');
+    }
+    public function index(Request $request)
+    {
+        $filters = $request->only([
+            'priceFrom',
+            'priceTo',
+            'beds',
+            'baths',
+            'areaFrom',
+            'areaTo'
+        ]);
+
         return @inertia(
             'Listing/Index',
             [
-                'listings' => Listing::all()
+                'filters' => $filters,
+                'listings' => Listing::mostRecent()->filter($filters)->paginate(9)->withQueryString()
             ]
         );
     }
@@ -33,7 +51,7 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        Listing::create(
+        $request->user()->listings()->create(
             $request->validate([
                 'beds' => 'required|integer|min:1|max:20',
                 'baths' => 'required|integer|min:1|max:20',
@@ -55,6 +73,11 @@ class ListingController extends Controller
      */
     public function show(Listing $listing)
     {
+
+        // if (Auth::user()->cannot('view', $listing)) {
+        //     abort(403);
+        // }
+
         return @inertia(
             'Listing/Show',
             [
@@ -110,4 +133,6 @@ class ListingController extends Controller
             ->with('success', 'Listing was deleted!');
 
     }
+
+
 }
