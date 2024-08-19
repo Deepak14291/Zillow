@@ -5,6 +5,19 @@ import { ZiggyVue } from 'ziggy';
 import '../css/app.css'
 
 createInertiaApp({
+    progress: {
+        // The delay after which the progress bar will appear, in milliseconds...
+        delay: 250,
+
+        // The color of the progress bar...
+        color: '#29d',
+
+        // Whether to include the default NProgress styles...
+        includeCSS: true,
+
+        // Whether the NProgress spinner will be shown...
+        showSpinner: true,
+    },
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         let page = pages[`./Pages/${name}.vue`]
@@ -17,4 +30,5 @@ createInertiaApp({
             .use(ZiggyVue)
             .mount(el)
     },
+
 })

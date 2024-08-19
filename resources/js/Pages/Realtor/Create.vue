@@ -87,17 +87,6 @@ const form = useForm({
 
 })
 
-const create = () => form.post(route('listing.store'))
+const create = () => form.post(route('realtor.listing.store'))
 
 </script>
-
-
-<style scoped>
-label {
-  margin-right: 2em;
-}
-
-div {
-  padding: 2px
-}
-</style>
