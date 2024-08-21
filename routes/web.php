@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
@@ -18,6 +19,10 @@ Route::get('/show', [IndexController::class, 'show']);
 
 Route::resource('listing', ListingController::class)
     ->only(['index', 'show']);
+
+Route::resource('listing.offer', ListingOfferController::class)
+    ->middleware('auth')
+    ->only(['store']);
 
 Route::delete('login', [AuthController::class, 'create'])
     ->name('login.delete');
