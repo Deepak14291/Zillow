@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,8 +26,16 @@ class RealtorListingController extends Controller
                 ->listings()
                 ->filter($filters)
                 ->withCount('images')
+                ->withCount('offers')
                 ->paginate(5)
                 ->withQueryString()
+        ]);
+    }
+
+    public function show(Listing $listing)
+    {
+        return inertia('Realtor/Show', [
+            'listing' => $listing->load('offers')
         ]);
     }
     /**
